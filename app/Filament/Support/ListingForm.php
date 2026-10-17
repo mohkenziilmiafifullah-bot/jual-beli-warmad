@@ -26,7 +26,7 @@ class ListingForm {
                 F\TextInput::make('longitude')->numeric(),
             ])->columns(2),
             F\Section::make('Foto Lokasi')->schema([
-                F\FileUpload::make('photos')->label('Foto (maks 6)')->image()->multiple()->maxFiles(6)->reorderable()
+                F\FileUpload::make('photos')->label('Foto (maks 6)')->image()->multiple()->maxFiles(6)->maxSize(4096)->reorderable()
                     ->disk('public')->directory('listings')->columnSpanFull(),
             ]),
         ];

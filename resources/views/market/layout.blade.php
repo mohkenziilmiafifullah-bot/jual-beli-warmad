@@ -15,7 +15,7 @@ addEventListener('DOMContentLoaded',function(){
 </head><body class="wm-body">
 <header class="wm-nav"><div class="wm-wrap wm-nav-in">
   <a href="{{ route('home') }}" class="wm-logo">WARMAD</a>
-  <nav><a href="https://wa.me/{{ config('warmad.admin_wa') }}?text={{ rawurlencode('Halo Admin Warmad, saya ingin bertanya.') }}" class="wm-btn" target="_blank" rel="noopener">Hubungi Admin</a></nav>
+  <nav><a href="https://wa.me/{{ \App\Models\Setting::adminWa() }}?text={{ rawurlencode('Halo Admin Warmad, saya ingin bertanya.') }}" class="wm-btn" target="_blank" rel="noopener">Hubungi Admin</a></nav>
 </div></header>
 <main>@yield('content')</main>
 <footer class="wm-foot"><div class="wm-wrap">© {{ date('Y') }} Warmad — Marketplace Lokasi Warung Madura</div></footer>

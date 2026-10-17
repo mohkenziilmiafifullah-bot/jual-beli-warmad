@@ -23,8 +23,7 @@ class Listing extends Model {
 
     /** Link WhatsApp ke ADMIN dengan draft pesan berisi detail toko. */
     public function getWaUrlAttribute(): string {
-        $n = preg_replace('/\D/','', config('warmad.admin_wa'));
-        if (str_starts_with($n,'0')) $n = '62'.substr($n,1);
+        $n = Setting::adminWa();
         $lok = trim(($this->district ? $this->district.', ' : '').$this->city, ', ');
         $L = ["Halo Admin Warmad, saya tertarik dengan toko berikut:", "",
               "*{$this->title}*",
