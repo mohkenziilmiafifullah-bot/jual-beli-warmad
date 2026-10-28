@@ -16,7 +16,20 @@ class Listing extends Model {
     }
     public function scopeActive($q) { return $q->where('status','active'); }
     public function user() { return $this->belongsTo(User::class); }
-    public function photoUrls(): array { return array_map(fn ($p) => asset('storage/'.ltrim($p,'/')), $this->photos ?? []); }
+    /** Hanya foto yang filenya benar-benar ada di disk, supaya browser tidak memicu error 404. */
+    public function photoUrls(): array {
+        $disk = Storage::disk('public');
+        $out = [];
+        foreach ((array) ($this->photos ?? []) as $p) {
+            $p = ltrim((string) $p, '/');
+            if ($p !== '' && $disk->exists($p)) $out[] = asset('storage/'.$p);
+        }
+        return $out;
+    }
+    public function getVideoUrlAttribute(): ?string {
+        $v = ltrim((string) $this->video, '/');
+        return ($v !== '' && Storage::disk('public')->exists($v)) ? asset('storage/'.$v) : null;
+    }
     public function getCoverUrlAttribute(): ?string { return $this->photoUrls()[0] ?? null; }
     public function getPriceLabelAttribute(): string { return 'Rp '.number_format($this->price,0,',','.').($this->transaction_type==='sewa'?' / tahun':''); }
     public function getTypeLabelAttribute(): string { return self::TYPES[$this->transaction_type] ?? $this->transaction_type; }
@@ -29,18 +42,10 @@ class Listing extends Model {
               "*{$this->title}*",
               "Jenis: {$this->type_label}",
               "Harga: {$this->price_label}"];
-        if ($this->monthly_omzet) $L[] = 'Omzet/bulan: Rp '.number_format($this->monthly_omzet,0,',','.');
         if ($lok) $L[] = "Lokasi: {$lok}";
         if ($this->address) $L[] = "Alamat: {$this->address}";
-        if ($this->land_area) $L[] = "Luas tanah: {$this->land_area} m²";
-        if ($this->building_area) $L[] = "Luas bangunan: {$this->building_area} m²";
-        if ($this->facilities) $L[] = 'Fasilitas: '.implode(', ', $this->facilities);
         $L[] = "Link: ".route('listing.show', $this);
         $L[] = ""; $L[] = "Mohon info lebih lanjut. Terima kasih.";
         return 'https://wa.me/'.$n.'?text='.rawurlencode(implode("\n", $L));
-    }
-    public function getMapUrlAttribute(): ?string {
-        if ($this->latitude && $this->longitude) return 'https://www.google.com/maps?q='.$this->latitude.','.$this->longitude;
-        return $this->address ? 'https://www.google.com/maps/search/'.rawurlencode($this->address) : null;
     }
 }

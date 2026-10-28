@@ -1,6 +1,8 @@
 <?php
 namespace App\Filament\Support;
 use App\Models\Listing;
+use App\Support\VideoTrimmer;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Filament\Forms\Components as F;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -11,23 +13,24 @@ class ListingForm {
                 F\TextInput::make('title')->label('Judul Listing')->required()->maxLength(120)->columnSpanFull(),
                 F\Select::make('transaction_type')->label('Jenis Transaksi')->options(Listing::TYPES)->default('jual')->required(),
                 F\TextInput::make('price')->label('Harga')->numeric()->prefix('Rp')->required(),
-                F\TextInput::make('monthly_omzet')->label('Omzet / Bulan (estimasi)')->numeric()->prefix('Rp'),
-                F\TextInput::make('land_area')->label('Luas Tanah')->numeric()->suffix('m²'),
-                F\TextInput::make('building_area')->label('Luas Bangunan')->numeric()->suffix('m²'),
-                F\TagsInput::make('facilities')->label('Fasilitas')->placeholder('Rak, Freezer, Listrik'),
                 F\Textarea::make('description')->label('Deskripsi')->rows(5)->columnSpanFull(),
             ])->columns(2),
-            F\Section::make('Lokasi')->schema([
+            F\Section::make('Tempat / Daerah')->schema([
                 F\TextInput::make('province')->label('Provinsi'),
                 F\TextInput::make('city')->label('Kota / Kabupaten')->required(),
-                F\TextInput::make('district')->label('Kecamatan'),
-                F\Textarea::make('address')->label('Alamat Lengkap')->rows(2)->columnSpanFull(),
-                F\TextInput::make('latitude')->numeric(),
-                F\TextInput::make('longitude')->numeric(),
+                F\TextInput::make('district')->label('Kecamatan / Daerah'),
+                F\Textarea::make('address')->label('Alamat / Keterangan Tempat')->rows(2)->columnSpanFull(),
             ])->columns(2),
-            F\Section::make('Foto Lokasi')->schema([
+            F\Section::make('Foto & Video')->schema([
                 F\FileUpload::make('photos')->label('Foto (maks 6)')->image()->multiple()->maxFiles(6)->maxSize(4096)->reorderable()
                     ->disk('public')->directory('listings')->columnSpanFull(),
+                F\FileUpload::make('video')->label('Video (opsional, MP4/WebM)')
+                    ->helperText('Maks tampil 50 MB. Jika file lebih besar (sampai '.config('warmad.video_upload_max_mb', 500).' MB), video otomatis dipotong dari awal sampai muat 50 MB.')
+                    ->acceptedFileTypes(['video/mp4','video/webm'])
+                    ->maxSize((int) config('warmad.video_upload_max_mb', 500) * 1024)
+                    ->disk('public')->directory('listings/video')
+                    ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file) => VideoTrimmer::store($file))
+                    ->columnSpanFull(),
             ]),
         ];
         $s[] = F\Section::make('Status Tampil')->schema([

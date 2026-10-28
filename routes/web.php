@@ -11,7 +11,7 @@ Route::get('/storage/{path}', function (string $path) {
     $file = $base ? realpath($base.DIRECTORY_SEPARATOR.$path) : false;
     abort_unless(
         $file && str_starts_with($file, $base.DIRECTORY_SEPARATOR) && is_file($file)
-            && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['jpg','jpeg','png','webp','gif'], true),
+            && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['jpg','jpeg','png','webp','gif','mp4','webm'], true),
         404
     );
     return response()->file($file, ['Cache-Control' => 'public, max-age=604800']);
