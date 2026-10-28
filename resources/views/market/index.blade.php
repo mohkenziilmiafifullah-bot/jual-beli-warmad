@@ -1,7 +1,7 @@
 @extends('market.layout')
 @section('content')
 <section class="wm-hero"><div class="wm-wrap">
-  <span class="wm-chip">Katalog Lokasi Warung Madura</span>
+  <span class="wm-chip">Jual Beli Warung Madura</span>
   <h1>Temukan <em class="wm-grad">Lokasi Warung</em><br>Madura Impian Anda</h1>
   <p>Lihat daftar toko yang dijual, disewakan, atau oper kontrak. Tertarik? Tinggal klik, langsung chat Admin via WhatsApp.</p>
   <form class="wm-search" method="get" action="{{ route('home') }}">
