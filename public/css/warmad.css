@@ -115,3 +115,75 @@ a{color:inherit;text-decoration:none}
 .wm-hero::before,.wm-hero::after{display:none}
 .wm-video{width:100%;max-height:460px;border-radius:1.2rem;background:#000;margin-top:10px;display:block}
 @media(max-width:560px){.wm-hero{padding:34px 0 24px}}
+
+/* ===== Cahaya & kedalaman (tidak polosan) ===== */
+@keyframes wm-beam{from{opacity:.55}to{opacity:1}}
+@keyframes wm-fade{from{opacity:0}to{opacity:1}}
+body.wm-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+ radial-gradient(60% 42% at 50% -6%,rgba(255,255,255,.95),transparent 72%),
+ radial-gradient(42% 38% at 6% 30%,rgba(124,58,237,.17),transparent 72%),
+ radial-gradient(38% 36% at 96% 55%,rgba(6,182,212,.17),transparent 72%),
+ radial-gradient(44% 38% at 38% 104%,rgba(236,72,153,.14),transparent 72%),
+ radial-gradient(rgba(124,58,237,.07) 1px,transparent 1.4px) 0 0/22px 22px}
+/* sorot cahaya dari atas, berdenyut pelan */
+body.wm-body::after{content:"";position:fixed;left:50%;top:-8vh;width:min(1100px,120vw);height:78vh;transform:translateX(-50%);z-index:-1;pointer-events:none;
+ background:conic-gradient(from 180deg at 50% 0,transparent 0deg,transparent 24deg,rgba(255,255,255,.7) 38deg,transparent 52deg,transparent 64deg,rgba(196,181,253,.38) 76deg,transparent 90deg,transparent 270deg,rgba(103,232,249,.34) 284deg,transparent 298deg,transparent 308deg,rgba(255,255,255,.7) 322deg,transparent 336deg,transparent 360deg);
+ -webkit-mask:linear-gradient(#000,transparent 85%);mask:linear-gradient(#000,transparent 85%);animation:wm-beam 7s ease-in-out infinite alternate}
+.wm-nav{box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 10px 30px -18px rgba(124,58,237,.45)}
+.wm-search{box-shadow:var(--sh),0 0 0 1px rgba(255,255,255,.7) inset,0 0 50px -12px rgba(6,182,212,.35)}
+/* kartu: kilau tepi, glow berwarna, spotlight mengikuti kursor */
+.wm-card{position:relative;background:linear-gradient(180deg,#fff,#faf8ff);box-shadow:var(--sh),0 1px 0 #fff inset}
+.wm-card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;z-index:2;
+ background:radial-gradient(220px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.65),rgba(196,181,253,.18) 45%,transparent 70%)}
+.wm-card:hover{border-color:rgba(124,58,237,.35);box-shadow:0 26px 54px -18px rgba(124,58,237,.5),0 0 44px -8px rgba(6,182,212,.4),0 1px 0 #fff inset}
+.wm-card:hover::after{opacity:1}
+/* bingkai foto di kartu + kilau menyapu saat hover */
+.wm-card .wm-img{margin:6px 6px 0;border-radius:.65rem;border:1px solid rgba(124,58,237,.2);box-shadow:0 8px 16px -10px rgba(30,27,75,.5),0 0 0 3px #fff}
+.wm-img::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.6) 50%,transparent 65%);transform:translateX(-130%);transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.wm-card:hover .wm-img::after{transform:translateX(130%)}
+.wm-card .wm-badge{z-index:1}
+.wm-cb{position:relative}
+
+/* ===== Galeri detail: setiap foto punya bingkai sendiri ===== */
+.wm-gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.wm-frame{position:relative;margin:0;padding:8px;border-radius:1.5rem;background:linear-gradient(145deg,#fff,#f1ecff);border:1px solid var(--bd);box-shadow:var(--sh),0 1px 0 #fff inset;transition:transform .3s,box-shadow .3s}
+.wm-frame::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:2px;background:var(--g);pointer-events:none;opacity:0;transition:opacity .3s;
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+.wm-frame:hover{transform:translateY(-4px);box-shadow:0 26px 50px -18px rgba(124,58,237,.5),0 0 40px -8px rgba(6,182,212,.4)}
+.wm-frame:hover::before,.wm-frame:focus-within::before{opacity:1}
+.wm-frame-main{grid-column:1/-1}
+.wm-zoom{position:relative;display:block;width:100%;padding:0;margin:0;border:0;background:#1e1b4b;cursor:zoom-in;border-radius:1.1rem;overflow:hidden;aspect-ratio:4/3}
+.wm-frame-main .wm-zoom{aspect-ratio:16/10}
+.wm-zoom:focus-visible{outline:3px solid var(--c);outline-offset:2px}
+.wm-gallery .wm-zoom img{width:100%;height:100%;max-height:none;border-radius:0;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.wm-zoom:hover img{transform:scale(1.05)}
+.wm-zoom::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.5) 50%,transparent 65%);transform:translateX(-130%);transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.wm-zoom:hover::after{transform:translateX(130%)}
+.wm-cnt{position:absolute;right:10px;bottom:10px;z-index:1;display:flex;align-items:center;gap:6px;background:rgba(15,12,41,.62);backdrop-filter:blur(6px);color:#fff;font-size:.72rem;font-weight:700;padding:5px 10px;border-radius:999px}
+.wm-vframe{margin-top:14px}
+.wm-vframe .wm-video{margin:0;border-radius:1.1rem;max-height:480px}
+@media(max-width:560px){.wm-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.wm-frame{padding:5px;border-radius:1.1rem}.wm-zoom{border-radius:.8rem}.wm-frame-main .wm-zoom{aspect-ratio:4/3}}
+
+/* ===== Lightbox: foto tampil dalam bingkai sendiri ===== */
+.wm-lb{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;
+ background:radial-gradient(70% 60% at 50% 30%,rgba(124,58,237,.42),rgba(15,12,41,.95) 72%);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.wm-lb.on{display:flex;animation:wm-fade .25s ease}
+.wm-lb-frame{position:relative;max-width:min(1100px,100%);padding:10px;border-radius:1.5rem;background:linear-gradient(145deg,#fff,#e9e3ff);
+ box-shadow:0 0 0 1px rgba(255,255,255,.45),0 34px 80px -20px rgba(0,0,0,.75),0 0 70px -10px rgba(124,58,237,.7);animation:wm-zoom .35s cubic-bezier(.2,.7,.2,1)}
+.wm-lb-frame img{display:block;max-width:100%;max-height:calc(100vh - 230px);min-height:120px;border-radius:1rem;object-fit:contain;background:#0f0c29;transition:opacity .2s}
+.wm-lb-frame img.wm-fade{opacity:.15}
+.wm-lb-cnt{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);background:var(--g);color:#fff;font-size:.78rem;font-weight:700;padding:5px 14px;border-radius:999px;box-shadow:0 8px 20px -6px rgba(124,58,237,.8)}
+.wm-lb button{font:inherit}
+.wm-lb-x,.wm-lb-p,.wm-lb-n{position:absolute;display:grid;place-items:center;width:46px;height:46px;border:1px solid rgba(255,255,255,.35);border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;backdrop-filter:blur(8px);transition:.2s}
+.wm-lb-x:hover,.wm-lb-p:hover,.wm-lb-n:hover{background:rgba(255,255,255,.3);box-shadow:0 0 24px rgba(103,232,249,.6)}
+.wm-lb-x{top:14px;right:14px}.wm-lb-p{left:14px;top:50%;transform:translateY(-50%)}.wm-lb-n{right:14px;top:50%;transform:translateY(-50%)}
+.wm-lb-x:focus-visible,.wm-lb-p:focus-visible,.wm-lb-n:focus-visible,.wm-th:focus-visible{outline:3px solid var(--c);outline-offset:2px}
+.wm-lb-th{display:flex;gap:10px;max-width:min(1100px,100%);overflow-x:auto;padding:8px 6px;margin-top:6px;scrollbar-width:thin}
+.wm-th{flex:none;padding:3px;border:2px solid transparent;border-radius:.85rem;background:#fff;cursor:pointer;opacity:.55;transition:.2s}
+.wm-th img{display:block;width:68px;height:52px;object-fit:cover;border-radius:.6rem}
+.wm-th:hover{opacity:.9}
+.wm-th.on{opacity:1;border-color:var(--c);box-shadow:0 0 18px rgba(6,182,212,.7)}
+.wm-lb.one .wm-lb-p,.wm-lb.one .wm-lb-n,.wm-lb.one .wm-lb-th,.wm-lb.one .wm-lb-cnt{display:none}
+@media(max-width:560px){.wm-lb-p,.wm-lb-n{top:auto;bottom:96px;transform:none;width:42px;height:42px}.wm-lb-p{left:10px}.wm-lb-n{right:10px}.wm-lb-frame{padding:6px;border-radius:1.1rem}.wm-lb-frame img{border-radius:.75rem;max-height:calc(100vh - 250px)}.wm-th img{width:54px;height:42px}}
+@media(hover:none){.wm-card::after{display:none}}
+@media(prefers-reduced-motion:reduce){body.wm-body::after,.wm-lb.on,.wm-lb-frame{animation:none!important}.wm-card,.wm-frame,.wm-zoom img,.wm-img::after,.wm-zoom::after{transition:none!important}}

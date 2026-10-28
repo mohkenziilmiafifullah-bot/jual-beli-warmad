@@ -11,6 +11,10 @@ addEventListener('DOMContentLoaded',function(){
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('wm-in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -6% 0px',threshold:.06});
   els.forEach(function(e){io.observe(e)});
 });
+addEventListener('pointermove',function(e){
+  if(e.pointerType==='touch')return;var c=e.target.closest&&e.target.closest('.wm-card');if(!c)return;
+  var r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px');
+},{passive:true});
 </script>
 </head><body class="wm-body">
 <header class="wm-nav"><div class="wm-wrap wm-nav-in">
